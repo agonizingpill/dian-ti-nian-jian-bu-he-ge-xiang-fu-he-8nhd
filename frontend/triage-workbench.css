@@ -1,0 +1,60 @@
+#triage-workbench-open {position:fixed; right:1.25rem; bottom:8.6rem; z-index:25; border-radius:.55rem;
+  background:#26384f; color:white; border:1px solid #3c5878; padding:.65rem .9rem; cursor:pointer}
+#triage-workbench-open[hidden] {display:none}
+#triage-workbench {width:min(66rem, calc(100% - 1.5rem)); max-height:calc(100% - 2rem); overflow:auto;
+  border:1px solid #9db0c4; border-radius:.9rem; padding:1.4rem; background:#f6f9fc; color:#16283a;
+  font:inherit; box-shadow:0 1.2rem 4rem rgba(6,24,40,.35)}
+#triage-workbench::backdrop {background:#102335d9}
+#triage-workbench header {display:flex; align-items:center; justify-content:space-between; gap:1rem}
+#triage-workbench h2, #triage-workbench h3, #triage-workbench h4 {margin:.35rem 0 .75rem; color:#16283a}
+#triage-workbench .tw-controls {display:flex; flex-wrap:wrap; gap:.65rem; align-items:end; padding:.8rem 0}
+#triage-workbench label {display:flex; flex-direction:column; gap:.35rem; flex:1 1 12rem; font-size:.85rem; font-weight:600}
+#triage-workbench button, #triage-workbench select, #triage-workbench input, #triage-workbench textarea {
+  font:inherit; color:inherit; border:1px solid #9db0c4; border-radius:.4rem; background:white;
+  padding:.45rem .65rem; min-height:2.2rem; max-width:100%}
+#triage-workbench button {cursor:pointer; background:#e7eef6}
+#triage-workbench button.primary {background:#26384f; color:white}
+#triage-workbench button:disabled {opacity:.45; cursor:not-allowed}
+#triage-workbench [role=status] {color:#2f5675; min-height:1.35rem; margin:.35rem 0; font-size:.9rem}
+#triage-workbench .tw-package-grid {display:grid; grid-template-columns:repeat(auto-fill,minmax(19rem,1fr)); gap:.8rem}
+#triage-workbench .tw-card {border:1px solid #c9d6e2; border-radius:.6rem; background:white; padding:.9rem; display:grid; gap:.45rem}
+#triage-workbench .tw-card.returned {border-left:.35rem solid #d85245}
+#triage-workbench .tw-card.issued {border-left:.35rem solid #17856e}
+#triage-workbench .tw-card .tw-no {font-weight:800; word-break:break-all}
+#triage-workbench .tw-hash {font-family:ui-monospace,Menlo,monospace; font-size:.72rem; color:#6b7c8c; word-break:break-all}
+#triage-workbench .tw-badge {display:inline-block; padding:.15rem .55rem; border-radius:99px; font-size:.72rem; font-weight:800}
+#triage-workbench .tw-badge.issued {background:#e9f7f3; color:#17856e}
+#triage-workbench .tw-badge.returned {background:#fff0ef; color:#d85245}
+#triage-workbench .tw-badge.checking {background:#e7f2fa; color:#1769aa}
+#triage-workbench .tw-badge.submitted {background:#fff7db; color:#9a6b00}
+#triage-workbench .tw-badge.accepted {background:#e9f7f3; color:#17856e}
+#triage-workbench .tw-progress {height:.55rem; background:#e3ebf2; border-radius:99px; overflow:hidden}
+#triage-workbench .tw-progress i {display:block; height:100%; background:#1769aa}
+#triage-workbench .tw-progress i.done {background:#17856e}
+#triage-workbench table {width:100%; border-collapse:collapse; font-size:.85rem; background:white}
+#triage-workbench th, #triage-workbench td {padding:.45rem .5rem; text-align:left; border-bottom:1px solid #dde6ee; vertical-align:top}
+#triage-workbench th {font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:#6b7c8c}
+#triage-workbench .tw-leaf {border:1px solid #c9d6e2; border-radius:.6rem; padding:.8rem; margin-bottom:.7rem; background:white}
+#triage-workbench .tw-leaf.checked {border-left:.35rem solid #17856e}
+#triage-workbench .tw-leaf.mismatch {border-left:.35rem solid #d85245}
+#triage-workbench .tw-feature-grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(10rem,1fr)); gap:.5rem; margin:.5rem 0}
+#triage-workbench .tw-feature-grid label {flex:1 1 10rem}
+#triage-workbench .tw-path {font-family:ui-monospace,Menlo,monospace; font-size:.75rem; background:#0f2233; color:#bfe0d6;
+  border-radius:.5rem; padding:.6rem; white-space:pre-wrap; margin:.4rem 0}
+#triage-workbench .tw-mismatch {border:1px solid #e6b3ad; background:#fff4f3; border-radius:.55rem; padding:.6rem;
+  margin:.45rem 0; font-size:.82rem}
+#triage-workbench .tw-mismatch strong {color:#a83832}
+#triage-workbench .tw-mismatch code {background:#f3e0de; padding:.05rem .3rem; border-radius:.25rem}
+#triage-workbench .tw-offline {background:#fff7db; color:#9a6b00; padding:.35rem .6rem; border-radius:.4rem;
+  font-size:.78rem; font-weight:800; display:none}
+#triage-workbench .tw-offline.show {display:inline-block}
+#triage-workbench .tw-claim-list {display:grid; gap:.5rem; margin-top:.6rem}
+#triage-workbench .tw-claim-row {display:flex; flex-wrap:wrap; gap:.5rem; align-items:center;
+  border:1px solid #c9d6e2; border-radius:.5rem; padding:.55rem .7rem; background:white}
+#triage-workbench .tw-claim-row .tw-grow {flex:1 1 14rem}
+#triage-workbench .tw-back {margin-bottom:.6rem}
+#triage-workbench .tw-node-grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(13rem,1fr)); gap:.6rem}
+#triage-workbench .tw-node {border:1px solid #c9d6e2; border-radius:.55rem; padding:.6rem; background:white; font-size:.8rem}
+#triage-workbench .tw-node code {font-size:.75rem}
+#triage-workbench .tw-ok {color:#17856e; font-weight:800}
+#triage-workbench .tw-bad {color:#d85245; font-weight:800}

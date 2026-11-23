@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel, Field
 
 from . import casework_service as service
-from .operations_evidence import actor_field
+from .actor_utils import actor_field
 from .auth import current_user
 
 router = APIRouter(prefix='/api/operational-cases', tags=['业务处置'])

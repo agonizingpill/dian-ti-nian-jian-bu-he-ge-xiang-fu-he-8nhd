@@ -3,7 +3,8 @@
 from fastapi import HTTPException
 
 from . import casework_store
-from .operations_evidence import actor_field, query
+from .actor_utils import actor_field
+from .operations_evidence import query
 from .recheck_handoff import RECHECK_HANDOFF
 
 WORKFLOWS = {

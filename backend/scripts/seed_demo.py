@@ -1,9 +1,12 @@
+import json
 import os
 import sys
 from datetime import date, datetime, timedelta
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from src.db import connection, init_schema
 from src.auth import hash_password
+from src import triage_store
+from src import triage_tree
 
 USERS = [
     ("operator@jingcheng.com", "李倩", "operator"),
@@ -73,7 +76,61 @@ def seed():
             cur.execute("SELECT id FROM rechecks WHERE notice_id=%s AND status='evidence_rejected'", (notice["id"],))
             if notice and not cur.fetchone():
                 cur.execute("INSERT INTO rechecks(notice_id,scheduled_at,inspector,status,photo_ref,photo_item_code,remarks,created_by) VALUES(%s,%s,'王工','evidence_rejected','IMG-YT-021-03.jpg','DOOR_FORCE','历史照片与安全回路项不匹配，已退回补证',%s)", (notice["id"],datetime(2026,11,23,14,0),user_ids["operator@jingcheng.com"]))
+        seed_triage_package(cur, user_ids)
     print("seed_demo complete: users=3 lifts=4 inspection_items=20")
+
+
+def seed_triage_package(cur, user_ids):
+    """Issue one fixed offline rule package and one in-progress review-point claim."""
+    triage_store.ensure_schema()
+    cur.execute("SELECT id FROM triage_rule_packages WHERE package_no LIKE 'TRP-DEMO-%' LIMIT 1")
+    if cur.fetchone():
+        return
+    package = triage_tree.build_package(issued_by="supervisor@jingcheng.com",
+                                        package_no=f"TRP-DEMO-{datetime.utcnow().strftime('%Y%m')}-0001")
+    cur.execute(
+        """INSERT INTO triage_rule_packages(package_no,tree_version,content_hash,package_json,issued_by)
+           VALUES(%s,%s,%s,%s,%s)""",
+        (package["package_no"], package["tree_version"], package["content_hash"],
+         json.dumps(package, ensure_ascii=False), user_ids["supervisor@jingcheng.com"]),
+    )
+    package_id = cur.lastrowid
+    total_leaves = len(triage_tree.leaf_ids(package["tree"]))
+    cur.execute(
+        """INSERT INTO triage_package_claims(package_id,review_point,claim_token,status,total_leaves,checked_leaves)
+           VALUES(%s,'江宁分站离线复核点 A',%s,'checking',%s,%s)""",
+        (package_id, "demo-claim-offline-0001-0000-0000-000000000001", total_leaves, 1),
+    )
+    claim_id = cur.lastrowid
+    first_leaf = package["leaves"][0]
+    result = triage_tree.evaluate(package["tree"], first_leaf["witness_input"])
+    checkpoint = {
+        "review_point": "江宁分站离线复核点 A",
+        "package_hash": package["content_hash"],
+        "checked_leaves": 1,
+        "total_leaves": total_leaves,
+        "leaf_results": [{
+            "leaf_id": first_leaf["leaf_id"],
+            "input": first_leaf["witness_input"],
+            "prediction": result["prediction"],
+            "advice": result["advice"],
+            "path": result["path"],
+        }],
+        "node_checks": [{
+            "node_id": split["node_id"], "feature": split["feature"],
+            "threshold": split["threshold"], "left_child": split["left_child"],
+            "right_child": split["right_child"],
+        } for split in package["splits"]],
+        "saved_at": datetime.utcnow().isoformat(),
+    }
+    cur.execute("UPDATE triage_package_claims SET checkpoint_json=%s WHERE id=%s",
+                (json.dumps(checkpoint, ensure_ascii=False), claim_id))
+    cur.execute(
+        """INSERT INTO triage_package_events(package_id,claim_id,action,actor,detail)
+           VALUES(%s,%s,'claim_package','operator@jingcheng.com',%s)""",
+        (package_id, claim_id, json.dumps({"review_point": "江宁分站离线复核点 A",
+                                           "total_leaves": total_leaves}, ensure_ascii=False)),
+    )
 
 if __name__ == "__main__":
     seed()

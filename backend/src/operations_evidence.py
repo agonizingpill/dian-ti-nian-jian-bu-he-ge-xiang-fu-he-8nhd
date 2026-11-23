@@ -10,6 +10,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field
 
 from .operations_queries import VIEWS
+from .actor_utils import actor_field
 from .auth import current_user
 from .db import connection
 
@@ -45,10 +46,6 @@ def ensure_receipt_table():
             )
         """)
         _schema_ready = True
-
-
-def actor_field(user, field):
-    return user.get(field) if isinstance(user, Mapping) else getattr(user, field, None)
 
 
 def get_view(module):
